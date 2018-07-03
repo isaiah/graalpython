@@ -43,6 +43,7 @@ import java.util.List;
 
 import com.oracle.graal.python.builtins.Builtin;
 import com.oracle.graal.python.builtins.CoreFunctions;
+import com.oracle.graal.python.builtins.PythonBuiltinClassType;
 import com.oracle.graal.python.builtins.PythonBuiltins;
 import com.oracle.graal.python.builtins.objects.PNone;
 import com.oracle.graal.python.builtins.objects.PNotImplemented;
@@ -1765,6 +1766,28 @@ public class IntBuiltins extends PythonBuiltins {
         @Fallback
         Object doGeneric(@SuppressWarnings("unused") Object self) {
             return PNotImplemented.NOT_IMPLEMENTED;
+        }
+    }
+
+    @Builtin(name = "to_bytes", minNumOfArguments = 1, maxNumOfArguments = 2)
+    @GenerateNodeFactory
+    abstract static class ToBytesNode extends PythonBuiltinNode {
+        @Specialization
+        PBytes doInt(int self, int length) {
+            byte[] bytes = new byte[length];
+            for (int i = 0 ; i < length; i++) {
+                bytes[i] = (byte) ((self >> i) & 0xFF);
+            }
+            return factory().createBytes(bytes);
+        }
+
+        @Specialization
+        PBytes doLong(long self, int length) {
+            byte[] bytes = new byte[length];
+            for (int i = 0 ; i < length; i++) {
+                bytes[i] = (byte) ((self >> i) & 0xFF);
+            }
+            return factory().createBytes(bytes);
         }
     }
 }
