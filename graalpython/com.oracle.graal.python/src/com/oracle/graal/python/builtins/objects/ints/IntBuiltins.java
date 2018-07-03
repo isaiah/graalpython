@@ -1769,20 +1769,26 @@ public class IntBuiltins extends PythonBuiltins {
         }
     }
 
-    @Builtin(name = "to_bytes", minNumOfArguments = 1, maxNumOfArguments = 2)
+    @Builtin(name = "to_bytes", fixedNumOfArguments = 3, takesVariableArguments = true)
     @GenerateNodeFactory
     abstract static class ToBytesNode extends PythonBuiltinNode {
         @Specialization
-        PBytes doInt(int self, int length) {
+        PBytes doInt(int self, int length, String byteorder) {
             byte[] bytes = new byte[length];
-            for (int i = 0 ; i < length; i++) {
-                bytes[i] = (byte) ((self >> i) & 0xFF);
+            if (byteorder.equals("big")) {
+                for (int i = 0; i < length; i++) {
+                    bytes[i] = (byte) ((self >> i) & 0xFF);
+                }
+            } else {
+                 for (int i = 0; i < length; i++) {
+                    bytes[i] = (byte) ((self << i) & 0xFF);
+                }
             }
             return factory().createBytes(bytes);
         }
 
         @Specialization
-        PBytes doLong(long self, int length) {
+        PBytes doLong(long self, int length, String byteorder) {
             byte[] bytes = new byte[length];
             for (int i = 0 ; i < length; i++) {
                 bytes[i] = (byte) ((self >> i) & 0xFF);
