@@ -14,6 +14,23 @@ To try it, you can use the bundled releases from
 some examples of what you can do with it, check out the
 [reference](https://www.graalvm.org/docs/reference-manual/languages/python/).
 
+### Development
+
+1. Install llvm, clang, jdk8 with package manager.
+
+2. Setup mx
+
+$ git clone https://github.com/graalvm/mx.git
+
+$ export PATH=$PATH:/path/to/mx
+
+$ cd graalpython; mx build
+
+3. Run graalpython
+
+$ mx python
+
+
 ### Licensing
 
 This Graal/Truffle-based implementation of Python is copyright (c) 2017, 2018
