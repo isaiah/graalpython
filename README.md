@@ -20,15 +20,17 @@ some examples of what you can do with it, check out the
 
 2. Setup mx
 
+```
 $ git clone https://github.com/graalvm/mx.git
 
 $ export PATH=$PATH:/path/to/mx
 
 $ cd graalpython; mx build
+```
 
 3. Run graalpython
 
-$ mx python
+`$ mx python`
 
 
 ### Licensing
