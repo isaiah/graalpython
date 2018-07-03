@@ -16,7 +16,7 @@ some examples of what you can do with it, check out the
 
 ### Development
 
-1. Install llvm, clang, jdk8 with package manager.
+1. Install llvm, clang, jdk8, libc++ with package manager.
 
 2. Setup mx
 
