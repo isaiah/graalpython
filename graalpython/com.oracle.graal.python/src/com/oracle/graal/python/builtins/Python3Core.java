@@ -81,6 +81,9 @@ import com.oracle.graal.python.builtins.objects.cell.CellBuiltins;
 import com.oracle.graal.python.builtins.objects.code.CodeBuiltins;
 import com.oracle.graal.python.builtins.objects.common.HashingStorage.DictEntry;
 import com.oracle.graal.python.builtins.objects.complex.ComplexBuiltins;
+import com.oracle.graal.python.builtins.objects.descr.ClassMethodDescrBuiltins;
+import com.oracle.graal.python.builtins.objects.descr.MethodDescrBuiltins;
+import com.oracle.graal.python.builtins.objects.descr.PMethodDescriptor;
 import com.oracle.graal.python.builtins.objects.dict.DictBuiltins;
 import com.oracle.graal.python.builtins.objects.dict.DictItemsBuiltins;
 import com.oracle.graal.python.builtins.objects.dict.DictItemsIteratorBuiltins;
@@ -111,9 +114,11 @@ import com.oracle.graal.python.builtins.objects.list.ListBuiltins;
 import com.oracle.graal.python.builtins.objects.list.PList;
 import com.oracle.graal.python.builtins.objects.mappingproxy.MappingproxyBuiltins;
 import com.oracle.graal.python.builtins.objects.memoryview.BufferBuiltins;
+import com.oracle.graal.python.builtins.objects.method.BuiltinMethodBuiltins;
 import com.oracle.graal.python.builtins.objects.method.MethodBuiltins;
 import com.oracle.graal.python.builtins.objects.module.PythonModule;
 import com.oracle.graal.python.builtins.objects.object.ObjectBuiltins;
+import com.oracle.graal.python.builtins.objects.object.PythonBuiltinObject;
 import com.oracle.graal.python.builtins.objects.object.PythonObject;
 import com.oracle.graal.python.builtins.objects.random.RandomBuiltins;
 import com.oracle.graal.python.builtins.objects.range.RangeBuiltins;
@@ -270,6 +275,9 @@ public final class Python3Core implements PythonCore {
                     new LocaleModuleBuiltins(),
                     new SysModuleBuiltins(),
                     new BufferBuiltins(),
+                    new MethodDescrBuiltins(),
+                    new ClassMethodDescrBuiltins(),
+                    new BuiltinMethodBuiltins(),
     };
 
     // not using EnumMap, HashMap, etc. to allow this to fold away during partial evaluation
@@ -705,10 +713,10 @@ public final class Python3Core implements PythonCore {
             mod.setAttribute(constantName, obj);
         }
 
-        Map<String, PBuiltinFunction> builtinFunctions = builtins.getBuiltinFunctions();
-        for (Map.Entry<String, PBuiltinFunction> entry : builtinFunctions.entrySet()) {
+        Map<String, PythonBuiltinObject> builtinFunctions = builtins.getBuiltinFunctions();
+        for (Map.Entry<String, PythonBuiltinObject> entry : builtinFunctions.entrySet()) {
             String methodName = entry.getKey();
-            PBuiltinFunction function = entry.getValue();
+            PythonBuiltinObject function = entry.getValue();
             mod.setAttribute(methodName, function);
         }
 
@@ -734,10 +742,10 @@ public final class Python3Core implements PythonCore {
             clazz.setAttributeUnsafe(className, obj);
         }
 
-        Map<String, PBuiltinFunction> builtinFunctions = builtins.getBuiltinFunctions();
-        for (Map.Entry<String, PBuiltinFunction> entry : builtinFunctions.entrySet()) {
+        Map<String, PythonBuiltinObject> builtinFunctions = builtins.getBuiltinFunctions();
+        for (Map.Entry<String, PythonBuiltinObject> entry : builtinFunctions.entrySet()) {
             String className = entry.getKey();
-            PBuiltinFunction function = entry.getValue();
+            PythonBuiltinObject function = entry.getValue();
             clazz.setAttributeUnsafe(className, function);
         }
     }

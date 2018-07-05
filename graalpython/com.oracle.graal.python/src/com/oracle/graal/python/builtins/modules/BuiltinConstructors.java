@@ -72,6 +72,8 @@ import com.oracle.graal.python.builtins.objects.cell.PCell;
 import com.oracle.graal.python.builtins.objects.common.HashingStorage.DictEntry;
 import com.oracle.graal.python.builtins.objects.common.HashingStorageNodes;
 import com.oracle.graal.python.builtins.objects.complex.PComplex;
+import com.oracle.graal.python.builtins.objects.descr.PClassMethodDescriptor;
+import com.oracle.graal.python.builtins.objects.descr.PMethodDescriptor;
 import com.oracle.graal.python.builtins.objects.dict.PDict;
 import com.oracle.graal.python.builtins.objects.dict.PDictView;
 import com.oracle.graal.python.builtins.objects.enumerate.PEnumerate;
@@ -106,6 +108,7 @@ import com.oracle.graal.python.builtins.objects.memoryview.PBuffer;
 import com.oracle.graal.python.builtins.objects.method.PBuiltinMethod;
 import com.oracle.graal.python.builtins.objects.method.PMethod;
 import com.oracle.graal.python.builtins.objects.module.PythonModule;
+import com.oracle.graal.python.builtins.objects.object.PythonBuiltinObject;
 import com.oracle.graal.python.builtins.objects.object.PythonObject;
 import com.oracle.graal.python.builtins.objects.range.PRange;
 import com.oracle.graal.python.builtins.objects.reversed.PSequenceReverseIterator;
@@ -1520,4 +1523,23 @@ public final class BuiltinConstructors extends PythonBuiltins {
         }
     }
 
+    // method_descriptor
+    @Builtin(name = "method_descriptor", constructsClass = PMethodDescriptor.class)
+    @GenerateNodeFactory
+    public abstract static class MethodDescrNode extends PythonBuiltinNode {
+        @Specialization
+        protected PMethodDescriptor construct(PythonClass cls, PythonClass type, PBuiltinMethod method) {
+            return factory().createMethodDescriptor(cls, type, method);
+        }
+    }
+
+    // classmethod_descriptor
+    @Builtin(name = "classmethod_descriptor", constructsClass = PClassMethodDescriptor.class)
+    @GenerateNodeFactory
+    public abstract static class ClassMethodDescrNode extends PythonBuiltinNode {
+        @Specialization
+        protected PClassMethodDescriptor construct(PythonClass cls, PythonClass type, PBuiltinMethod method) {
+            return factory().createClassMethodDescr(cls, type, method);
+        }
+    }
 }

@@ -36,6 +36,9 @@ import com.oracle.truffle.api.RootCallTarget;
 import com.oracle.truffle.api.dsl.NodeFactory;
 import com.oracle.truffle.api.nodes.RootNode;
 
+/* PyMethodDef
+ * The information about underlining built-in function
+ */
 public final class PBuiltinFunction extends PythonBuiltinObject implements PythonCallable {
 
     @CompilationFinal private String name;

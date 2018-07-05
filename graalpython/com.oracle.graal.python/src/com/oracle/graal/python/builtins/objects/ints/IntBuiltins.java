@@ -1512,6 +1512,15 @@ public class IntBuiltins extends PythonBuiltins {
         }
     }
 
+    @Builtin(name = "foo", isStatic = true)
+    @GenerateNodeFactory
+    public abstract static class FooNode extends PythonBuiltinNode {
+        @Specialization
+        public Object foo(PythonClass cls) {
+            return 1;
+        }
+    }
+
     @Builtin(name = "from_bytes", fixedNumOfArguments = 2, takesVariableArguments = true, keywordArguments = {"signed"})
     @GenerateNodeFactory
     @SuppressWarnings("unused")

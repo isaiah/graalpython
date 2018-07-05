@@ -46,6 +46,8 @@ import com.oracle.graal.python.builtins.objects.common.HashMapStorage;
 import com.oracle.graal.python.builtins.objects.common.HashingStorage;
 import com.oracle.graal.python.builtins.objects.common.LocalsStorage;
 import com.oracle.graal.python.builtins.objects.complex.PComplex;
+import com.oracle.graal.python.builtins.objects.descr.PClassMethodDescriptor;
+import com.oracle.graal.python.builtins.objects.descr.PMethodDescriptor;
 import com.oracle.graal.python.builtins.objects.dict.PDict;
 import com.oracle.graal.python.builtins.objects.dict.PDictView;
 import com.oracle.graal.python.builtins.objects.dict.PDictView.PDictItemsView;
@@ -352,6 +354,26 @@ public abstract class PythonObjectFactory extends Node {
 
     public PBuiltinFunction createBuiltinFunction(String name, Arity arity, RootCallTarget callTarget) {
         return trace(new PBuiltinFunction(lookupClass(PythonBuiltinClassType.PBuiltinFunction), name, arity, callTarget));
+    }
+
+    public PMethodDescriptor createMethodDescriptor(PythonClass type, PBuiltinMethod func) {
+        return createMethodDescriptor(lookupClass(PythonBuiltinClassType.PMethodDescr), type, func);
+    }
+
+    public PMethodDescriptor createMethodDescriptor(PythonClass cls, PythonClass type, PBuiltinMethod func) {
+        return trace(new PMethodDescriptor(cls, type, func));
+    }
+
+    public PClassMethodDescriptor createClassMethodDescr(PythonClass cls, PythonClass type, PBuiltinMethod func) {
+        return trace(new PClassMethodDescriptor(cls, type, func));
+    }
+
+    public PClassMethodDescriptor createClassMethodDescr(PythonClass type, PBuiltinMethod func) {
+        return createClassMethodDescr(lookupClass(PythonBuiltinClassType.PClassMethodDescr), type, func);
+    }
+
+    public PClassMethodDescriptor createClassMethodDescr(PythonClass type, PBuiltinFunction func) {
+        return trace(new PClassMethodDescriptor(lookupClass(PythonBuiltinClassType.PClassMethodDescr), type, createBuiltinMethod(null, func)));
     }
 
     public GetSetDescriptor createGetSetDescriptor(PythonCallable get, PythonCallable set, String name, PythonClass type) {

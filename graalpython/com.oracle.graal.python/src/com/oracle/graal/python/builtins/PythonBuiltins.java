@@ -38,8 +38,10 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.function.BiConsumer;
 
+import com.oracle.graal.python.builtins.objects.descr.PMethodDescriptor;
 import com.oracle.graal.python.builtins.objects.function.Arity;
 import com.oracle.graal.python.builtins.objects.function.PBuiltinFunction;
+import com.oracle.graal.python.builtins.objects.object.PythonBuiltinObject;
 import com.oracle.graal.python.builtins.objects.object.PythonObject;
 import com.oracle.graal.python.builtins.objects.type.PythonBuiltinClass;
 import com.oracle.graal.python.nodes.function.BuiltinFunctionRootNode;
@@ -51,7 +53,7 @@ import com.oracle.truffle.api.dsl.NodeFactory;
 
 public abstract class PythonBuiltins {
     protected final Map<String, Object> builtinConstants = new HashMap<>();
-    private final Map<String, PBuiltinFunction> builtinFunctions = new HashMap<>();
+    private final Map<String, PythonBuiltinObject> builtinFunctions = new HashMap<>();
     private final Map<PythonBuiltinClass, Map.Entry<Class<?>[], Boolean>> builtinClasses = new HashMap<>();
 
     protected abstract List<? extends NodeFactory<? extends PythonBuiltinBaseNode>> getNodeFactories();
@@ -86,7 +88,12 @@ public abstract class PythonBuiltins {
                 }
                 builtinConstants.put(builtin.name(), attribute);
             } else {
-                setBuiltinFunction(builtin.name(), function);
+                if (builtin.isStatic()) {
+                    PythonBuiltinClass builtinClass = createBuiltinClassFor(core, builtin);
+                    setBuiltinFunction(builtin.name(), core.factory().createClassMethodDescr(builtinClass, function));
+                } else {
+                    setBuiltinFunction(builtin.name(), function);
+                }
             }
             attribute.setAttribute(__DOC__, doc);
         });
@@ -159,7 +166,7 @@ public abstract class PythonBuiltins {
                         Arrays.asList(new String[0]), Arrays.asList(builtin.keywordArguments()));
     }
 
-    private void setBuiltinFunction(String name, PBuiltinFunction function) {
+    private void setBuiltinFunction(String name, PythonBuiltinObject function) {
         builtinFunctions.put(name, function);
     }
 
@@ -168,7 +175,7 @@ public abstract class PythonBuiltins {
         builtinClasses.put(builtinClass, simpleEntry);
     }
 
-    protected Map<String, PBuiltinFunction> getBuiltinFunctions() {
+    protected Map<String, PythonBuiltinObject> getBuiltinFunctions() {
         return builtinFunctions;
     }
 

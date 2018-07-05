@@ -28,11 +28,16 @@ package com.oracle.graal.python.builtins.objects.method;
 import com.oracle.graal.python.builtins.objects.function.Arity;
 import com.oracle.graal.python.builtins.objects.function.PBuiltinFunction;
 import com.oracle.graal.python.builtins.objects.function.PythonCallable;
+import com.oracle.graal.python.builtins.objects.module.PythonModule;
 import com.oracle.graal.python.builtins.objects.object.PythonBuiltinObject;
 import com.oracle.graal.python.builtins.objects.type.PythonClass;
 import com.oracle.truffle.api.RootCallTarget;
 import com.oracle.truffle.api.frame.FrameDescriptor;
 
+/* PyCFunction
+ *
+ * it should represent both built-in function (w/o self) and builtin-method (w/ self)
+ */
 public class PBuiltinMethod extends PythonBuiltinObject implements PythonCallable {
 
     private final PBuiltinFunction function;
@@ -44,6 +49,10 @@ public class PBuiltinMethod extends PythonBuiltinObject implements PythonCallabl
         this.self = self;
         this.function = function;
         this.callTarget = function.getCallTarget();
+    }
+
+    public PBuiltinMethod bindTo(Object self) {
+        return new PBuiltinMethod(getPythonClass(), self, function);
     }
 
     public PBuiltinFunction __func__() {
@@ -76,6 +85,6 @@ public class PBuiltinMethod extends PythonBuiltinObject implements PythonCallabl
 
     @Override
     public String toString() {
-        return "<builtin-method '" + function.getName() + "' of '" + self + "' objects>";
+        return "<built-in method '" + function.getName() + "' of '" + self + "' objects>";
     }
 }

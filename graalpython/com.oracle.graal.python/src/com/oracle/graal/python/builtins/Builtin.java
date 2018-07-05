@@ -45,6 +45,9 @@ public @interface Builtin {
 
     int maxNumOfArguments() default 0;
 
+    /*
+     * flag native members
+     */
     boolean isGetter() default false;
 
     boolean isSetter() default false;
@@ -56,4 +59,9 @@ public @interface Builtin {
     String[] keywordArguments() default {};
 
     boolean isPublic() default true;
+
+    /*
+     * Mark a native class method, e.g. int.from_bytes
+     */
+    boolean isStatic() default false;
 }

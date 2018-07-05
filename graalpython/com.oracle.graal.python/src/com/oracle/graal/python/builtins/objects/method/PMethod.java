@@ -36,6 +36,7 @@ import com.oracle.graal.python.builtins.objects.type.PythonClass;
 import com.oracle.truffle.api.RootCallTarget;
 import com.oracle.truffle.api.frame.FrameDescriptor;
 
+/* A bound python method */
 public final class PMethod extends PythonBuiltinObject implements PythonCallable {
 
     private final PFunction function;
@@ -102,6 +103,6 @@ public final class PMethod extends PythonBuiltinObject implements PythonCallable
 
     @Override
     public String toString() {
-        return "<method '" + function.getName() + "' of " + self + " object at " + function.hashCode() + ">";
+        return "<bound method '" + function.getName() + "' of " + self + ">";
     }
 }
