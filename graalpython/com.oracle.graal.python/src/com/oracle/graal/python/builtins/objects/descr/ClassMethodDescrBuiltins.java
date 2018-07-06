@@ -18,7 +18,7 @@ import java.util.List;
 import static com.oracle.graal.python.nodes.SpecialMethodNames.__GET__;
 
 @CoreFunctions(extendClasses = PClassMethodDescriptor.class)
-public class ClassMethodDescrBuiltins extends PythonBuiltins {
+public class ClassMethodDescrBuiltins extends MethodDescrBuiltins {
     @Override
     protected List<? extends NodeFactory<? extends PythonBuiltinBaseNode>> getNodeFactories() {
         return ClassMethodDescrBuiltinsFactory.getFactories();
@@ -29,8 +29,8 @@ public class ClassMethodDescrBuiltins extends PythonBuiltins {
     abstract static class ClassMethodDescrGetNode extends PythonTernaryBuiltinNode {
         @Specialization
         Object get(PClassMethodDescriptor self, Object obj, Object type) {
-            if (type == null || type == PNone.NO_VALUE) {
-                if (obj != null && obj != PNone.NO_VALUE) {
+            if (type == null || type == PNone.NONE) {
+                if (obj != null && obj != PNone.NONE) {
                     type = ((PythonObject) obj).getPythonClass();
                 } else {
                     // throw type error

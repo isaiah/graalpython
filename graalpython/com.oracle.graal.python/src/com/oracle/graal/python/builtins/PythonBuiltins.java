@@ -62,6 +62,8 @@ public abstract class PythonBuiltins {
         if (builtinFunctions.size() > 0) {
             return;
         }
+        CoreFunctions cf = getClass().getAnnotation(CoreFunctions.class);
+        final PythonBuiltinClassType[] types = cf.pythonClassTypes();
         initializeEachFactoryWith((factory, builtin) -> {
             RootCallTarget callTarget = Truffle.getRuntime().createCallTarget(new BuiltinFunctionRootNode(core.getLanguage(), builtin, factory));
             String name = builtin.name();
@@ -89,10 +91,16 @@ public abstract class PythonBuiltins {
                 builtinConstants.put(builtin.name(), attribute);
             } else {
                 if (builtin.isStatic()) {
-                    PythonBuiltinClass builtinClass = createBuiltinClassFor(core, builtin);
-                    setBuiltinFunction(builtin.name(), core.factory().createClassMethodDescr(builtinClass, function));
+                    setBuiltinFunction(builtin.name(), core.factory().createClassMethodDescr(types[0], function));
                 } else {
-                    setBuiltinFunction(builtin.name(), function);
+                    if (types.length > 0 && builtin.isMethod()) {
+                        setBuiltinFunction(builtin.name(), core.factory().createMethodDescriptor(types[0], core.factory().createBuiltinMethod(null, function)));
+                    } else {
+                        // if (builtin.isSlot()) { // TODO remove the isMethod flag if everything is flagged with slot
+                        //    setBuiltinFunction(builtin.name(), core.factory().createSlotWrapper(function));
+                        //}
+                        setBuiltinFunction(builtin.name(), function);
+                    }
                 }
             }
             attribute.setAttribute(__DOC__, doc);

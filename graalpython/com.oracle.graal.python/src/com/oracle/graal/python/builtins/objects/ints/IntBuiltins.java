@@ -71,7 +71,7 @@ import com.oracle.truffle.api.dsl.Specialization;
 import com.oracle.truffle.api.dsl.TypeSystemReference;
 import com.oracle.truffle.api.profiles.BranchProfile;
 
-@CoreFunctions(extendClasses = PInt.class)
+@CoreFunctions(extendClasses = PInt.class, pythonClassTypes = PythonBuiltinClassType.PInt)
 public class IntBuiltins extends PythonBuiltins {
 
     @Override
@@ -1512,6 +1512,20 @@ public class IntBuiltins extends PythonBuiltins {
         }
     }
 
+    @Builtin(name = "foo", isMethod = true, fixedNumOfArguments = 1)
+    @GenerateNodeFactory
+    public abstract static class FooNode extends PythonBuiltinNode {
+        @Specialization
+        public int foo(int self) {
+            return self + 1;
+        }
+
+        @Specialization
+        public Object foo(PInt self) {
+            return 1;
+        }
+    }
+
     @Builtin(name = "from_bytes", fixedNumOfArguments = 3, takesVariableArguments = true, keywordArguments = {"signed"}, isStatic = true)
     @GenerateNodeFactory
     @SuppressWarnings("unused")
@@ -1631,7 +1645,7 @@ public class IntBuiltins extends PythonBuiltins {
         }
     }
 
-    @Builtin(name = "bit_length", fixedNumOfArguments = 1)
+    @Builtin(name = "bit_length", fixedNumOfArguments = 1, isMethod = true)
     @GenerateNodeFactory
     @TypeSystemReference(PythonArithmeticTypes.class)
     abstract static class BitLengthNode extends PythonBuiltinNode {
@@ -1769,7 +1783,7 @@ public class IntBuiltins extends PythonBuiltins {
         }
     }
 
-    @Builtin(name = "to_bytes", fixedNumOfArguments = 3, takesVariableArguments = true)
+    @Builtin(name = "to_bytes", fixedNumOfArguments = 3, takesVariableArguments = true, isMethod = true)
     @GenerateNodeFactory
     abstract static class ToBytesNode extends PythonBuiltinNode {
         @Specialization

@@ -85,6 +85,6 @@ public class PBuiltinMethod extends PythonBuiltinObject implements PythonCallabl
 
     @Override
     public String toString() {
-        return "<built-in method '" + function.getName() + "' of '" + self + "' objects>";
+        return "<built-in method '" + function.getName() + "' of '" + self + "' objects>"; // self.getType()
     }
 }

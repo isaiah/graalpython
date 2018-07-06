@@ -356,8 +356,8 @@ public abstract class PythonObjectFactory extends Node {
         return trace(new PBuiltinFunction(lookupClass(PythonBuiltinClassType.PBuiltinFunction), name, arity, callTarget));
     }
 
-    public PMethodDescriptor createMethodDescriptor(PythonClass type, PBuiltinMethod func) {
-        return createMethodDescriptor(lookupClass(PythonBuiltinClassType.PMethodDescr), type, func);
+    public PMethodDescriptor createMethodDescriptor(PythonBuiltinClassType type, PBuiltinMethod func) {
+        return createMethodDescriptor(lookupClass(PythonBuiltinClassType.PMethodDescr), lookupClass(type), func);
     }
 
     public PMethodDescriptor createMethodDescriptor(PythonClass cls, PythonClass type, PBuiltinMethod func) {
@@ -368,12 +368,12 @@ public abstract class PythonObjectFactory extends Node {
         return trace(new PClassMethodDescriptor(cls, type, func));
     }
 
-    public PClassMethodDescriptor createClassMethodDescr(PythonClass type, PBuiltinMethod func) {
-        return createClassMethodDescr(lookupClass(PythonBuiltinClassType.PClassMethodDescr), type, func);
+    public PClassMethodDescriptor createClassMethodDescr(PythonBuiltinClassType type, PBuiltinMethod func) {
+        return createClassMethodDescr(lookupClass(PythonBuiltinClassType.PClassMethodDescr), lookupClass(type), func);
     }
 
-    public PClassMethodDescriptor createClassMethodDescr(PythonClass type, PBuiltinFunction func) {
-        return trace(new PClassMethodDescriptor(lookupClass(PythonBuiltinClassType.PClassMethodDescr), type, createBuiltinMethod(null, func)));
+    public PClassMethodDescriptor createClassMethodDescr(PythonBuiltinClassType type, PBuiltinFunction func) {
+        return trace(new PClassMethodDescriptor(lookupClass(PythonBuiltinClassType.PClassMethodDescr), lookupClass(type), createBuiltinMethod(null, func)));
     }
 
     public GetSetDescriptor createGetSetDescriptor(PythonCallable get, PythonCallable set, String name, PythonClass type) {

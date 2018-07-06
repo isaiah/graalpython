@@ -64,4 +64,14 @@ public @interface Builtin {
      * Mark a native class method, e.g. int.from_bytes
      */
     boolean isStatic() default false;
+
+    /*
+     * Mark slot method, e.g. __iter__
+     */
+    boolean isSlot() default false;
+
+    /**
+     * test flag to create a method descriptor for instance native method
+     */
+    boolean isMethod() default false;
 }
