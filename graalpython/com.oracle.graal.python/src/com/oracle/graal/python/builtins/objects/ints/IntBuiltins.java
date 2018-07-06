@@ -1512,16 +1512,7 @@ public class IntBuiltins extends PythonBuiltins {
         }
     }
 
-    @Builtin(name = "foo", isStatic = true)
-    @GenerateNodeFactory
-    public abstract static class FooNode extends PythonBuiltinNode {
-        @Specialization
-        public Object foo(PythonClass cls) {
-            return 1;
-        }
-    }
-
-    @Builtin(name = "from_bytes", fixedNumOfArguments = 2, takesVariableArguments = true, keywordArguments = {"signed"})
+    @Builtin(name = "from_bytes", fixedNumOfArguments = 3, takesVariableArguments = true, keywordArguments = {"signed"}, isStatic = true)
     @GenerateNodeFactory
     @SuppressWarnings("unused")
     @TypeSystemReference(PythonArithmeticTypes.class)
@@ -1541,28 +1532,28 @@ public class IntBuiltins extends PythonBuiltins {
 
         @Specialization
         @TruffleBoundary
-        public Object frombytesSignedOrNot(String str, String byteorder, Object[] args, boolean keywordArg) {
+        public Object frombytesSignedOrNot(PythonClass cls, String str, String byteorder, Object[] args, boolean keywordArg) {
             byte[] bytes = littleToBig(str.getBytes(), byteorder);
             BigInteger integer = new BigInteger(bytes);
             if (keywordArg) {
-                return factory().createInt(NegNode.negate(integer));
+                return factory().createInt(cls, NegNode.negate(integer));
             } else {
-                return factory().createInt(integer);
+                return factory().createInt(cls, integer);
             }
         }
 
         @Specialization
         @TruffleBoundary
-        public Object frombytes(String str, String byteorder, Object[] args, PNone keywordArg) {
+        public Object frombytes(PythonClass cls, String str, String byteorder, Object[] args, PNone keywordArg) {
             byte[] bytes = littleToBig(str.getBytes(), byteorder);
-            return factory().createInt(new BigInteger(bytes));
+            return factory().createInt(cls, new BigInteger(bytes));
         }
 
         @Specialization
         @TruffleBoundary
-        public Object fromPBytes(PBytes str, String byteorder, Object[] args, PNone keywordArg) {
+        public Object fromPBytes(PythonClass cls, PBytes str, String byteorder, Object[] args, PNone keywordArg) {
             byte[] bytes = littleToBig(str.getInternalByteArray(), byteorder);
-            return factory().createInt(new BigInteger(bytes));
+            return factory().createInt(cls, new BigInteger(bytes));
         }
     }
 
